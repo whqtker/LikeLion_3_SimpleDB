@@ -53,9 +53,18 @@ public class Sql {
 
         return -1;
     }
-//
-//    public int update() {
-//    }
+
+    public int update() {
+        try {
+            PreparedStatement prst = conn.prepareStatement(query.toString());
+            setParameters(prst);
+            return prst.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1;
+    }
 //
 //    public int delete() {
 //    }
