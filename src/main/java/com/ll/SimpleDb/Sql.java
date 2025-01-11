@@ -1,5 +1,7 @@
 package com.ll.SimpleDb;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -138,11 +140,60 @@ public class Sql {
         return rows;
     }
 
+    // overloading
+    public <T> List<T> selectRows(Class<T> clazz) {
+        List<T> rows = new ArrayList<>();
+
+        try (PreparedStatement prst = conn.prepareStatement(query.toString())) {
+            setParameters(prst);
+
+            try (ResultSet rs = prst.executeQuery()) {
+                // ResultSetMetaData: ResultSet의 메타데이터를 가져오는 인터페이스
+                // getMetaData(): ResultSet의 메타데이터를 가져옴
+                ResultSetMetaData rsmd = rs.getMetaData();
+
+                // getColumnCount(): ResultSet의 열 수를 반환
+                int columnCount = rsmd.getColumnCount();
+
+                while (rs.next()) {
+                    T row = clazz.getDeclaredConstructor().newInstance(); // 각 행을 저장하기 위한 객체
+
+                    // 각 열을 순회하며 열의 이름과 데이터를 가져온 후, row에 저장
+                    for (int i = 1; i <= columnCount; i++) {
+                        String columnName = rsmd.getColumnName(i);
+                        Object columnValue = rs.getObject(i);
+
+                        Field field = clazz.getDeclaredField(columnName);
+                        field.setAccessible(true);
+                        field.set(row, columnValue);                    }
+                    rows.add(row);
+                }
+            } catch (NoSuchFieldException | InvocationTargetException | InstantiationException |
+                     IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
+        return rows;
+    }
+
     public Map<String, Object> selectRow() {
         List<Map<String, Object>> rows = selectRows(); // selectRow() 재활용
         if (rows.isEmpty()) {
             return new HashMap<>();
         }
+        return rows.get(0);
+    }
+
+    // overloading
+    public <T> T selectRow(Class<T> clazz) {
+        List<T> rows = selectRows(clazz);
+        if (rows.isEmpty()) {
+            return null;
+        }
+
         return rows.get(0);
     }
 
