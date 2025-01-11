@@ -122,13 +122,39 @@ public class Sql {
         }
         return rows.get(0);
     }
-//
-//    public LocalDateTime selectDatetime() {
-//    }
-//
-//    public Long selectLong() {
-//    }
-//
+
+    public LocalDateTime selectDatetime() {
+        try (PreparedStatement prst = conn.prepareStatement(query.toString())) {
+            setParameters(prst);
+            try (ResultSet rs = prst.executeQuery()) {
+                if (rs.next()) {
+                    // 첫 번째 열의 값을 Timestamp 타입으로 반환한 후 LocalDateTime으로 변환
+                    return rs.getTimestamp(1).toLocalDateTime();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public Long selectLong() {
+        try (PreparedStatement prst = conn.prepareStatement(query.toString())) {
+            setParameters(prst);
+            try (ResultSet rs = prst.executeQuery()) {
+                if (rs.next()) {
+                    // 첫 번째 열의 값을 Timestamp 타입으로 반환한 후 LocalDateTime으로 변환
+                    return rs.getLong(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1L;
+    }
+
 //    public String selectString() {
 //    }
 //
