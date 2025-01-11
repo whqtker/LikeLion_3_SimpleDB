@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
 public class SimpleDb {
-    private final Sql sql = new Sql();
     Connection conn = null;
     PreparedStatement prst = null;
     private boolean devMode = false;
@@ -32,6 +31,7 @@ public class SimpleDb {
     }
 
     public Sql genSql() {
+        return new Sql(conn);
     }
 
     // prst.close() -> conn.close() 순서 중요 !
