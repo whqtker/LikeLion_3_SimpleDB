@@ -114,9 +114,14 @@ public class Sql {
 
         return rows;
     }
-//
-//    public Map<String, Object> selectRow() {
-//    }
+
+    public Map<String, Object> selectRow() {
+        List<Map<String, Object>> rows = selectRows(); // selectRow() 재활용
+        if (rows.isEmpty()) {
+            return new HashMap<>();
+        }
+        return rows.get(0);
+    }
 //
 //    public LocalDateTime selectDatetime() {
 //    }
