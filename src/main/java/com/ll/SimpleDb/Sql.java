@@ -34,6 +34,29 @@ public class Sql {
         return this;
     }
 
+    // appendIn(): SQL 쿼리에 IN 절을 추가, 메서드 체이닝 사용
+    // 최종 목표는 WHERE id IN (?)을 WHERE id IN (?, ?, ?, ...)으로 변환하는 것
+    public Sql appendIn(String sqlPart, Object... args) {
+        // (?)을 (?, ?, ?, ...)로 변환하여 inClause에 저장
+        StringBuilder inClause = new StringBuilder();
+        for (int i = 0; i < args.length; i++) {
+            inClause.append("?");
+            if (i < args.length - 1) {
+                inClause.append(", ");
+            }
+        }
+
+        // sqlPart의 (?)을 inClause((?, ?, ?, ...))로 변경
+        String modifiedSqlPart = sqlPart.replace("?", inClause.toString());
+        query.append(modifiedSqlPart).append(" ");
+
+        for (Object arg : args) {
+            params.add(arg);
+        }
+
+        return this;
+    }
+
     public long insert() {
         try {
             // PreparedStatement: SQL 쿼리를 실행하기 위한 객체
