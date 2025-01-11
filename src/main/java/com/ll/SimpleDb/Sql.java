@@ -1,11 +1,9 @@
 package com.ll.SimpleDb;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -84,9 +82,38 @@ public class Sql {
 
         return -1;
     }
-//
-//    public List<Map<String, Object>> selectRows() {
-//    }
+
+    // selectRows(): SELECT 쿼리를 실행하고 결과를 List 형태로 리턴
+    public List<Map<String, Object>> selectRows() {
+        List<Map<String, Object>> rows = new ArrayList<>();
+
+        try (PreparedStatement prst = conn.prepareStatement(query.toString())) {
+            setParameters(prst);
+
+            try (ResultSet rs = prst.executeQuery()) {
+                // ResultSetMetaData: ResultSet의 메타데이터를 가져오는 인터페이스
+                // getMetaData(): ResultSet의 메타데이터를 가져옴
+                ResultSetMetaData rsmd = rs.getMetaData();
+
+                // getColumnCount(): ResultSet의 열 수를 반환
+                int columnCount = rsmd.getColumnCount();
+
+                while (rs.next()) {
+                    Map<String, Object> row = new HashMap<>(); // 각 행을 저장하기 위한 객체
+
+                    // 각 열을 순회하며 열의 이름과 데이터를 가져온 후, row에 저장
+                    for (int i = 1; i <= columnCount; i++) {
+                        row.put(rsmd.getColumnName(i), rs.getObject(i));
+                    }
+                    rows.add(row);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rows;
+    }
 //
 //    public Map<String, Object> selectRow() {
 //    }
