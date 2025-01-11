@@ -11,17 +11,24 @@ import java.util.Map;
 
 public class Sql {
     private final Connection conn;
-    private final StringBuilder query;
-    private final List<Object> params;
+    private final StringBuilder query; // query: SQL 쿼리
+    private final List<Object> params; // params: SQL 쿼리의 파라미터
 
+    // 생성자, Connection 객체를 받아와서 conn에 저장, query와 params 초기화
     public Sql(Connection conn) {
         this.conn = conn;
         this.query = new StringBuilder();
         this.params = new ArrayList<>();
     }
 
+    // append(): SQL 쿼리에 sqlParts와 args를 추가, 메서드 체이닝 사용
+    // sqlParts: SQL 쿼리의 일부분
+    // args: SQL 쿼리의 파라미터
     public Sql append(String sqlParts, Object... args) {
+        // sqlParts를 query에 추가
         query.append(sqlParts).append(" ");
+
+        // args를 params에 추가
         for (Object arg : args) {
             params.add(arg);
         }

@@ -9,6 +9,7 @@ public class SimpleDb {
     Connection conn = null;
     private boolean devMode = false;
 
+    // 생성자, DB 연결
     public SimpleDb(String hostName, String userName, String password, String dbName) {
         String url = "jdbc:mysql://" + hostName + "/" + dbName;
 
@@ -20,15 +21,19 @@ public class SimpleDb {
             e.printStackTrace();
         }
     }
+
+    // setDevMode(): devMode 설정
     public void setDevMode(boolean devMode) {
         this.devMode = devMode;
     }
 
+    // run(): SQL 쿼리 실행
     public void run(String sql, Object... args) {
         if(devMode) {
             System.out.println("[SQL Query] " + sql);
         }
 
+        // prst에 파라미터 설정 후 실행
         try (PreparedStatement prst = conn.prepareStatement(sql)) {
             for (int i = 0; i < args.length; i++) {
                 prst.setObject(i + 1, args[i]);
@@ -39,10 +44,12 @@ public class SimpleDb {
         }
     }
 
+    // genSql(): Sql 객체 생성
     public Sql genSql() {
         return new Sql(conn);
     }
 
+    // close(): DB 연결 종료
     public void close() {
         try {
             if (conn != null) {
