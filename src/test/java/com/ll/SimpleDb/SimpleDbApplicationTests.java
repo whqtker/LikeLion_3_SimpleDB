@@ -15,6 +15,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class SimpleDbTest {
 	private static SimpleDb simpleDb;
