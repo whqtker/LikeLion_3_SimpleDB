@@ -210,8 +210,22 @@ public class Sql {
         return null;
     }
 
-//    public List<Long> selectLongs() {
-//    }
+    public List<Long> selectLongs() {
+        List<Long> longs = new ArrayList<>();
+
+        try (PreparedStatement prst = conn.prepareStatement(query.toString())) {
+            setParameters(prst);
+            try (ResultSet rs = prst.executeQuery()) {
+                while (rs.next()) {
+                    longs.add(rs.getLong(1));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return longs;
+    }
 
     // setParameters(): PreparedStatement에 파라미터 설정
     private void setParameters(PreparedStatement prst) throws SQLException {
