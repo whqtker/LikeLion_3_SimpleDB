@@ -60,12 +60,34 @@ public class SimpleDb {
         }
     }
 
+    // startTransaction(): 트랜잭션 시작
+    // setAutoCommit()으로 트랜잭션 관련 작업을 처리한다.
+    // setAutoCommit(false): 자동 커밋을 비활성화 -> 개발자가 수동으로 commit, rollback을 해야 함
     public void startTransaction() {
+        try {
+            conn.setAutoCommit(false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
+    // rollback(): 트랜잭션 롤백
     public void rollback() {
+        try {
+            conn.rollback();
+            conn.setAutoCommit(true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
+    // commit(): 트랜잭션 커밋
     public void commit() {
+        try {
+            conn.commit();
+            conn.setAutoCommit(true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
