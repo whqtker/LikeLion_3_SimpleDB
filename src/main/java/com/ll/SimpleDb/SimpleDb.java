@@ -8,6 +8,8 @@ public class SimpleDb {
     private final Sql sql = new Sql();
     Connection conn = null;
     PreparedStatement prst = null;
+    private boolean devMode = false;
+
     public SimpleDb(String hostName, String userName, String password, String dbName) {
         String url = "jdbc:mysql://" + hostName + "/" + dbName;
 
@@ -19,16 +21,31 @@ public class SimpleDb {
             e.printStackTrace();
         }
     }
-    public void setDevMode(boolean b) {
+    public void setDevMode(boolean devMode) {
+        this.devMode = devMode;
     }
 
-    public void run(String sql) {
+    public void run(String sql, Object... args) {
+        if(devMode) {
+            System.out.println("[SQL Query] " + sql);
+        }
     }
 
     public Sql genSql() {
     }
 
+    // prst.close() -> conn.close() 순서 중요 !
     public void close() {
+        try {
+            if (prst != null) {
+                prst.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void startTransaction() {

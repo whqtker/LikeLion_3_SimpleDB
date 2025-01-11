@@ -31,7 +31,7 @@ public class SimpleDbTest {
 		createArticleTable();
 	}
 
-	// 각 테스트 전 실행되는 메서드
+	// 각 테스트 메서드 전에 실행되는 메서드
 	// article 테이블 초기화 및 테스트 데이터 생성
 	@BeforeEach
 	public void beforeEach() {
