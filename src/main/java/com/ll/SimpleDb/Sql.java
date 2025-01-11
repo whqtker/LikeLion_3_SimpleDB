@@ -155,12 +155,38 @@ public class Sql {
         return -1L;
     }
 
-//    public String selectString() {
-//    }
-//
-//    public Boolean selectBoolean() {
-//    }
-//
+    public String selectString() {
+        try (PreparedStatement prst = conn.prepareStatement(query.toString())) {
+            setParameters(prst);
+            try (ResultSet rs = prst.executeQuery()) {
+                if (rs.next()) {
+                    // 첫 번째 열의 값을 Timestamp 타입으로 반환한 후 LocalDateTime으로 변환
+                    return rs.getString(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public Boolean selectBoolean() {
+        try (PreparedStatement prst = conn.prepareStatement(query.toString())) {
+            setParameters(prst);
+            try (ResultSet rs = prst.executeQuery()) {
+                if (rs.next()) {
+                    // 첫 번째 열의 값을 Timestamp 타입으로 반환한 후 LocalDateTime으로 변환
+                    return rs.getBoolean(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 //    public List<Long> selectLongs() {
 //    }
 
