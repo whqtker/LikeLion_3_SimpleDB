@@ -3,10 +3,10 @@ package com.ll.SimpleDb;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class SimpleDb {
     Connection conn = null;
-    PreparedStatement prst = null;
     private boolean devMode = false;
 
     public SimpleDb(String hostName, String userName, String password, String dbName) {
@@ -28,18 +28,23 @@ public class SimpleDb {
         if(devMode) {
             System.out.println("[SQL Query] " + sql);
         }
+
+        try (PreparedStatement prst = conn.prepareStatement(sql)) {
+            for (int i = 0; i < args.length; i++) {
+                prst.setObject(i + 1, args[i]);
+            }
+            prst.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public Sql genSql() {
         return new Sql(conn);
     }
 
-    // prst.close() -> conn.close() 순서 중요 !
     public void close() {
         try {
-            if (prst != null) {
-                prst.close();
-            }
             if (conn != null) {
                 conn.close();
             }
