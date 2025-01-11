@@ -65,9 +65,18 @@ public class Sql {
 
         return -1;
     }
-//
-//    public int delete() {
-//    }
+
+    public int delete() {
+        try {
+            PreparedStatement prst = conn.prepareStatement(query.toString());
+            setParameters(prst);
+            return prst.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1;
+    }
 //
 //    public List<Map<String, Object>> selectRows() {
 //    }
